@@ -1,0 +1,38 @@
+[
+  {
+    "tourname": "pondicherry",
+    "tourid": "00001",
+    "included": [
+      "Travelling expenses",
+      " Accommodation",
+      "Trip host",
+      "Pre hired tempo",
+      " First aid"
+    ],
+    "rating": 9,
+    "cost": 29999,
+    "location": "pondicherry",
+    "timespent": "3 days",
+    "starting date": "30-1-2020",
+    "strarting time": "7:00 am",
+    "return time": "9:00 pm",
+    "carousel": [
+      "https://th.bing.com/th/id/OIP.4kxJ0E-QjJkiG87JA6QXpAHaE8?rs=1&pid=ImgDetMain://source.unsplash.com/1600x900/?mountain",
+      "https://th.bing.com/th/id/OIP.4kxJ0E-QjJkiG87JA6QXpAHaE8?rs=1&pid=ImgDetMain",
+      "https://th.bing.com/th/id/OIP.4kxJ0E-QjJkiG87JA6QXpAHaE8?rs=1&pid=ImgDetMain"
+    ],
+    "stops": [
+      {
+        "day1": [
+          {
+            "loc": "Tambaram",
+            "notes": "Tambaram is a southern suburb of Chennai. Located within the Chengalpattu district of Tamil Nadu",
+            "image": "https://swadeshitraveller.com/swadeshi_backend/static/images/place/pondicherry/0054b772-71dc-4653-95e5-d3b11787429b.jpg",
+            "pros": ["train", "beach", "breakfast"],
+            "duration": "5hrs"
+          }
+        ]
+      }
+    ]
+  }
+]
