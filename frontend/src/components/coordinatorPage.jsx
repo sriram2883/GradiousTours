@@ -326,9 +326,6 @@ const CoordinatorPage = () => {
                         <Typography variant="body2" color="textSecondary">
                           {stop.notes}
                         </Typography>
-                        <Typography variant="body2" color="textSecondary">
-                          Rating: {stop.rating}/10
-                        </Typography>
                       </CardContent>
                     </Card>
                   ))}
