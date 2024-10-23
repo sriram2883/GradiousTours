@@ -18,13 +18,17 @@ import {
   List,
   ListItem,
   ListItemText,
+  Table,
 } from "@mui/material";
+import Mail from "@mui/icons-material/Email";
+import WhatsApp from "@mui/icons-material/WhatsApp";
 import Carousel from "react-material-ui-carousel";
 import CloseIcon from "@mui/icons-material/Close";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 
 const CoordinatorPage = () => {
+
   const navigate = useNavigate();
   const [coordinators, setCoordinators] = useState([]);
   const [tours, setTours] = useState([]);
@@ -33,11 +37,18 @@ const CoordinatorPage = () => {
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(null); // Error state
   const [total, setTotal] = useState(0);
-
+  const [Message, setMessage] = useState(
+    "Hello, we are going to have a great time on our upcoming tour. Please be ready at the starting point on time. Thank you."
+  );
+  let allMails;
+  let mailLinks;
+  const logout = () => {
+    localStorage.clear();
+    navigate("/login");
+  };
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     const token = localStorage.getItem("token");
-
     const fetchData = async () => {
       setLoading(true);
       setError(null);
@@ -80,13 +91,14 @@ const CoordinatorPage = () => {
         const bookingsData = await bookingsResponse.json();
 
         const totalBookings = calculateTotal(bookingsData); // Calculate total
-
+        // console.log(coordinatorsData);
         setCoordinators(coordinatorsData || []);
         setTours(toursData?.map((tour) => tour.details) || []);
         setBookings(bookingsData || []);
         setTotal(totalBookings); // Set the total count
       } catch (err) {
         console.error("Error fetching data:", err);
+        logout(); // Log out on error
         setError("An error occurred while fetching data.");
       } finally {
         setLoading(false);
@@ -104,15 +116,50 @@ const CoordinatorPage = () => {
     return total;
   };
 
-
   const findTourById = (tourId) => tours.find((tour) => tour.tourid === tourId);
 
-  const findBookingsByTourId = (tourId) =>
-    bookings.filter((booking) => booking.tour_id === tourId);
+  const findBookingsByTourId = (tourId) => {
+    const tourBookings = bookings.filter((booking) => booking.tour_id === tourId);
+    allMails = tourBookings.map((booking) => booking.email).join(",");
+    mailLinks = `mailto:${allMails}?subject=Group%20Message&body=${encodeURIComponent(Message)}`;
+    return tourBookings;
+  };
 
   const handleTourClick = (tour) => setSelectedTour(tour);
 
   const handleCloseModal = () => setSelectedTour(null);
+
+
+  const sendWhatsAppGroupMessage = async (tourId) => {
+    const phoneNumbers = findBookingsByTourId(tourId).map((booking) => booking.phone);
+    const uniquePhoneNumbers = [...new Set(phoneNumbers)]; // Remove duplicates
+
+    try {
+      const response = await fetch("http://localhost:3001/guide/send-whatsapp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${localStorage.getItem("token")}`
+        },
+        body: JSON.stringify({
+          message: Message,
+          recipients: uniquePhoneNumbers,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        alert("WhatsApp messages sent successfully!");
+      } else {
+        alert("Failed to send WhatsApp messages.");
+      }
+    } catch (error) {
+      console.error("Error sending WhatsApp messages:", error);
+      alert("An error occurred while sending the messages.");
+    }
+  };
+  
 
   if (loading) return <Typography>Loading...</Typography>; // Loading indicator
   if (error) return <Typography color="error">{error}</Typography>; // Error message
@@ -121,12 +168,7 @@ const CoordinatorPage = () => {
     <>
       <Navbar />
       <Box sx={{ padding: 4 }}>
-        <Typography
-          variant="h4"
-          gutterBottom
-          textAlign="center"
-          color="primary"
-        >
+        <Typography variant="h4" gutterBottom textAlign="center" color="primary">
           Coordinator's Profile & Tours
         </Typography>
 
@@ -143,9 +185,7 @@ const CoordinatorPage = () => {
                         <Typography variant="h5" color="primary">
                           {coordinator.username}
                         </Typography>
-                        <Typography variant="body1">
-                          Email: {coordinator.email}
-                        </Typography>
+                        <Typography variant="body1">Email: {coordinator.email}</Typography>
                       </Box>
                     </Box>
                   </CardContent>
@@ -155,7 +195,6 @@ const CoordinatorPage = () => {
                 <Typography variant="h6" color="primary" sx={{ marginTop: 2 }}>
                   Total Traveler Bookings: {total}
                 </Typography>
-
 
                 {/* Tour Details */}
                 <Typography variant="h6" color="primary">
@@ -177,24 +216,19 @@ const CoordinatorPage = () => {
 
                               {/* Tour Date and Time */}
                               <Typography variant="body2">
-                                <strong>Start Date:</strong>{" "}
-                                {tour?.starting_date || "N/A"}
+                                <strong>Start Date:</strong> {tour?.starting_date || "N/A"}
                               </Typography>
                               <Typography variant="body2">
-                                <strong>Start Time:</strong>{" "}
-                                {tour?.starting_time || "N/A"}
+                                <strong>Start Time:</strong> {tour?.starting_time || "N/A"}
                               </Typography>
                               <Typography variant="body2">
-                                <strong>Return Time:</strong>{" "}
-                                {tour?.return_time || "N/A"}
+                                <strong>Return Time:</strong> {tour?.return_time || "N/A"}
                               </Typography>
                               <Typography variant="body2">
-                                <strong>Starting point:</strong>{" "}
-                                {tour?.starting_point || "N/A"}
+                                <strong>Starting point:</strong> {tour?.starting_point || "N/A"}
                               </Typography>
                               <Typography variant="body2">
-                                <strong>Return Date:</strong>{" "}
-                                {tour?.return_date || "N/A"}
+                                <strong>Return Date:</strong> {tour?.return_date || "N/A"}
                               </Typography>
 
                               <Carousel>
@@ -218,90 +252,176 @@ const CoordinatorPage = () => {
                                 View Details
                               </Button>
 
-                              <Typography
-                                variant="h6"
-                                color="primary"
-                                sx={{ marginTop: 2 }}
-                              >
+                              <Typography variant="h6" color="primary" sx={{ marginTop: 2 }}>
                                 Traveler Bookings:
                               </Typography>
 
                               {findBookingsByTourId(tourId).length === 0 ? (
-                                <Typography
-                                  variant="body1"
-                                  color="textSecondary"
-                                >
+                                <Typography variant="body1" color="textSecondary">
                                   No bookings available.
                                 </Typography>
                               ) : (
-                                findBookingsByTourId(tourId).map(
-                                  (booking, index) => (
-                                    <Box key={index} sx={{ padding: 2 }}>
-                                      <Typography variant="body1">
-                                        Traveler: {booking.username} (
-                                        {booking.email})
-                                      </Typography>
-                                      <Typography variant="body2">
-                                        Phone: {booking.phone} | Total
-                                        Travelers: {booking.count}
-                                      </Typography>
-                                    </Box>
-                                  )
-                                )
+                                <>
+                                  <Table style={{ textAlign: "center" }}>
+                                    <thead>
+                                      <tr>
+                                        <th>Traveler</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Total Travelers</th>
+                                        <th>Actions</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {findBookingsByTourId(tourId).map((booking, index) => (
+                                        <tr key={index}>
+                                          <td>{booking.username}</td>
+                                          <td>{booking.email}</td>
+                                          <td>{booking.phone}</td>
+                                          <td>{booking.count}</td>
+                                          <td>
+                                            <a
+                                              href={`https://wa.me/${booking.phone}?text=${encodeURIComponent(Message)}`}
+                                              target="_blank"
+                                              rel="noopener noreferrer"
+                                            >
+                                              <WhatsApp sx={{color:"#347928",marginRight:2}} />
+                                            </a>
+                                            <a
+                                              href={`mailto:${booking.email}?subject=Group%20Message&body=${encodeURIComponent(Message)}`}
+                                              target="_blank"
+                                              rel="noopener noreferrer"
+                                            >
+                                              <Mail sx={{color:'#3ABEF9'}} />
+                                            </a>
+                                          </td>
+                                        </tr>
+                                      ))}
+                                    </tbody>
+                                  </Table>
+
+                                  {/* Group mail section */}
+
+
+                                  <Box sx={{ marginTop: 2, display: 'flex', alignItems: 'center' }}>
+                                    <a href={mailLinks} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center' }}>
+                                      <IconButton
+                                        sx={{
+                                          marginLeft: 2,
+                                          fontSize: 60,
+                                          color: 'secondary.main',
+                                          '&:hover': {
+                                            cursor: 'pointer',
+                                            opacity: 0.8, // Optional hover effect
+                                          },
+                                        }}
+                                      >
+                                        <Mail sx={{ fontSize: 40, color:"#3ABEF9" }} />
+                                      </IconButton>
+                                    </a> {/* Adjust the size here */}
+                                    <Typography variant="body1" sx={{ marginLeft: 1, color: 'primary.main' }}> {/* Adjust the color here */}
+                                      Group Mail
+                                    </Typography>
+
+
+                                    <IconButton
+                                      onClick={() => sendWhatsAppGroupMessage(tourId)}
+                                      sx={{
+                                        marginLeft: 2,
+                                        color: 'secondary.main',
+                                        '&:hover': {
+                                          cursor: 'pointer',
+                                          opacity: 0.8, // Optional hover effect
+                                        },
+                                      }}
+                                    >
+                                      <WhatsApp sx={{ fontSize: 40 , color : '#347928'}} />
+                                    </IconButton>
+                                    <Typography variant="body1" sx={{ marginLeft: 1, color: 'primary.main' }}> {/* Adjust the color here */}
+                                      Group WhatsApp
+                                    </Typography>
+
+                                  </Box>
+
+
+                                </>
                               )}
                             </CardContent>
                           </Card>
                         </Grid>
-                      ) : (
-                        <Typography key={tourId} variant="body1" color="error">
-                          No tour found for this ID.
-                        </Typography>
-                      );
+                      ) : null;
                     })
                   ) : (
-                    <Typography variant="body1" color="textSecondary">
-                      No assigned tours.
-                    </Typography>
+                    <Typography>No tours assigned yet.</Typography>
                   )}
                 </Grid>
               </Grid>
             ))}
           </Grid>
         ) : (
-          <Typography variant="body1" color="textSecondary">
-            No coordinators available.
-          </Typography>
+          <Typography>No coordinators found.</Typography>
         )}
+      </Box>
+      {
+        ((coordinators[0].tours.assigned_tours.length > 0) ?
+          <Box sx={{ marginTop: 2,marginBottom:4, display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <Typography variant="body1" fontWeight={600}>Message to Travelers:</Typography>
+            <textarea
+              value={Message}
+              onChange={(e) => setMessage(e.target.value)}
+              rows="4"
+              style={{ width: "60%" }}
+            />
+          </Box>
+          : null)
+      }
+      <Footer />
 
-        {/* Modal for Tour Details */}
-        {selectedTour && (
-          <Dialog
-            open={Boolean(selectedTour)}
-            onClose={handleCloseModal}
-            maxWidth="md"
-            fullWidth
+      {/* Modal for selected tour */}
+      <Dialog open={Boolean(selectedTour)} onClose={handleCloseModal} maxWidth="md" fullWidth>
+        <DialogTitle>
+          Tour Details
+          <IconButton
+            aria-label="close"
+            onClick={handleCloseModal}
+            sx={{ position: "absolute", right: 8, top: 8 }}
           >
-            <DialogTitle>
-              Tour Details
-              <IconButton
-                aria-label="close"
-                onClick={handleCloseModal}
-                sx={{ position: "absolute", right: 8, top: 8 }}
-              >
-                <CloseIcon />
-              </IconButton>
-            </DialogTitle>
-            <DialogContent dividers>
-              <Typography variant="h6">
-                Tour: {selectedTour.tourname}
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent dividers>
+          {selectedTour && (
+            <>
+              <Carousel>
+                {selectedTour.carousel.map((image, index) => (
+                  <CardMedia
+                    key={index}
+                    component="img"
+                    height="140"
+                    image={image}
+                    alt={`Tour image ${index + 1}`}
+                  />
+                ))}
+              </Carousel>
+              <Typography variant="h6">Tour: {selectedTour.tourname}</Typography>
+              <Typography variant="body1">
+                <strong>Location:</strong> {selectedTour.location}
               </Typography>
-              <Typography>Location: {selectedTour.location}</Typography>
-              <Typography>Cost: ₹{selectedTour.cost}</Typography>
-              <Typography>Rating: {selectedTour.rating}/10</Typography>
-              <Typography>Duration: {selectedTour.timespent}</Typography>
-              <Typography>Start: {selectedTour.starting_date}</Typography>
-              <Typography>Time: {selectedTour.starting_time}</Typography>
-              <Typography>Return: {selectedTour.return_time}</Typography>
+              <Typography variant="body1">
+                <strong>Start Date:</strong> {selectedTour.starting_date || "N/A"}
+              </Typography>
+              <Typography variant="body1">
+                <strong>Start Time:</strong> {selectedTour.starting_time || "N/A"}
+              </Typography>
+              <Typography variant="body1">
+                <strong>Return Date:</strong> {selectedTour.return_date || "N/A"}
+              </Typography>
+              <Typography variant="body1">
+                <strong>Return Time:</strong> {selectedTour.return_time || "N/A"}
+              </Typography>
+              <Typography variant="body1">
+                <strong>Starting Point:</strong> {selectedTour.starting_point || "N/A"}
+              </Typography>
               <Typography variant="h6">Included:</Typography>
               <List>
                 {selectedTour.included.map((item, index) => (
@@ -331,16 +451,15 @@ const CoordinatorPage = () => {
                   ))}
                 </Box>
               ))}
-            </DialogContent>
-            <DialogActions>
-              <Button autoFocus onClick={handleCloseModal}>
-                Close
-              </Button>
-            </DialogActions>
-          </Dialog>
-        )}
-      </Box>
-      <Footer />
+            </>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseModal} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

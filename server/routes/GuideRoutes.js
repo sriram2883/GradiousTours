@@ -1,4 +1,4 @@
-const express=require('express')
+const express = require('express')
 const router = express.Router()
 const JWT = require('jsonwebtoken')
 const TravellerModel = require('../models/schemas/TravellerSchema')
@@ -6,23 +6,25 @@ const GuideModel = require('../models/schemas/GuideSchema')
 const TourModel = require('../models/schemas/TourSchema')
 const Guide = require('../models/schemas/GuideSchema')
 const key = process.env.JWT_SECRET;
+const twilio = require('twilio');
+const client= new twilio(process.env.TWILIO_SID,process.env.TWILIO_AUTH)
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
     if (!token) return res.sendStatus(401);
     JWT.verify(token, key || 'secret', (err, user) => {
         if (err) return res.sendStatus(403);
-        GuideModel.findOne({email:user.email}).then((result)=>{
+        GuideModel.findOne({ email: user.email }).then((result) => {
             // console.log(result)
-            if(result.length === 0){
+            if (result.length === 0) {
                 return res.sendStatus(401);
             }
             next();
-        }).catch((err)=>{
+        }).catch((err) => {
             console.error(err);
             return res.sendStatus(500);
         });
-    });    
+    });
 }
 
 router.get('/travellers/:username', authenticateToken, (req, res) => {
@@ -32,7 +34,7 @@ router.get('/travellers/:username', authenticateToken, (req, res) => {
         }
 
         const tourIds = result.tours.assigned_tours;
-        const travellerPromises = tourIds.map((id) => 
+        const travellerPromises = tourIds.map((id) =>
             TravellerModel.find({ tour_id: id })
         );
 
@@ -52,36 +54,48 @@ router.get('/travellers/:username', authenticateToken, (req, res) => {
 });
 
 
-router.get('/tour/:username',authenticateToken,(req,res)=>{
+router.get('/tour/:username', authenticateToken, (req, res) => {
     //sending tour schedule
     // console.log(req.params.username);
     var tour_id;
-    GuideModel.find({username:req.params.username}).then((result)=>{
+    GuideModel.find({ username: req.params.username }).then((result) => {
         tour_id = result[0].tours.assigned_tours;
-        TourModel.find({tour_id:tour_id}).then((result)=>{
-        // console.log(result)
+        TourModel.find({ tour_id: tour_id }).then((result) => {
+            // console.log(result)
 
             res.status(200).json(result);
-        }).catch((err)=>{
+        }).catch((err) => {
             console.error(err);
             return res.sendStatus(500);
         });
-    }).catch((err)=>{
+    }).catch((err) => {
         console.error(err);
         return res.sendStatus(500);
     });
-    
+
 })
 router.get(
-    '/guide/:username' ,authenticateToken, (req,res)=>{
+    '/guide/:username', authenticateToken, (req, res) => {
         // console.log(req.params.username)
-    GuideModel.find({username:req.params.username}).then((result)=>{
-        // console.log(result)
-        res.status(200).json(result);
-    }).catch((err)=>{
-        console.error(err);
-        return res.sendStatus(500);
-    });
+        GuideModel.find({ username: req.params.username }).then((result) => {
+            // console.log(result)
+            res.status(200).json(result);
+        }).catch((err) => {
+            console.error(err);
+            return res.sendStatus(500);
+        });
     })
-
+router.post('/send-whatsapp',authenticateToken, (req, res) => {
+    const { message, recipients } = req.body;
+    const promises = recipients.map((recipient) =>
+        client.messages.create({
+            body: message,
+            from:`whatsapp:+14155238886`, // Your Twilio WhatsApp number
+            to: `whatsapp:+91${7075645401}`, // Number to send WhatsApp message to
+        })
+    );
+    Promise.all(promises)
+        .then((results) => res.status(200).json({ success: true, results }))
+        .catch((error) => {res.status(500).json({ success: false, error });console.log(error)});
+});
 module.exports = router;
