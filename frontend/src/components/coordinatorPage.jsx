@@ -222,15 +222,14 @@ const CoordinatorPage = () => {
                                 <strong>Start Time:</strong> {tour?.starting_time || "N/A"}
                               </Typography>
                               <Typography variant="body2">
+                                <strong>Return Date:</strong> {tour?.return_date || "N/A"}
+                              </Typography>
+                              <Typography variant="body2">
                                 <strong>Return Time:</strong> {tour?.return_time || "N/A"}
                               </Typography>
                               <Typography variant="body2">
                                 <strong>Starting point:</strong> {tour?.starting_point || "N/A"}
                               </Typography>
-                              <Typography variant="body2">
-                                <strong>Return Date:</strong> {tour?.return_date || "N/A"}
-                              </Typography>
-
                               <Carousel>
                                 {tour.carousel.map((image, index) => (
                                   <CardMedia
