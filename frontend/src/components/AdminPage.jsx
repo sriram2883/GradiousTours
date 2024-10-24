@@ -114,7 +114,7 @@ const AdminPage = () => {
     },
   ]);
   useEffect(()=>{
-    fetch('http://localhost:3001/user/tours' , {method: 'GET'} , {headers: {'Content-Type': 'application/json'}}).then(res => res.json()).then(data=>{
+    fetch('https://project-tour-management-server.onrender.com/user/tours' , {method: 'GET'} , {headers: {'Content-Type': 'application/json'}}).then(res => res.json()).then(data=>{
       // console.log(data)
       const tour = data.map((tour)=> { 
         return tour.details
@@ -123,7 +123,7 @@ const AdminPage = () => {
     setTours(tour);
   })
   fetch(
-    "http://localhost:3001/admin/coadmins",
+    "https://project-tour-management-server.onrender.com/admin/coadmins",
     { method: "GET" ,
     
       headers: {
@@ -137,7 +137,7 @@ const AdminPage = () => {
       // console.log(data);
       setAdmins(data);
     });
-    fetch('http://localhost:3001/admin/guides', 
+    fetch('https://project-tour-management-server.onrender.com/admin/guides', 
       {
         method: 'GET',
         headers: {
@@ -254,7 +254,7 @@ const AdminPage = () => {
   };
 
   const removeTour = (tourid) => {
-    fetch(`http://localhost:3001/admin/tour/${tourid}` , 
+    fetch(`https://project-tour-management-server.onrender.com/admin/tour/${tourid}` , 
       {
         method:"DELETE" , 
         headers: {
@@ -273,7 +273,7 @@ const AdminPage = () => {
   };
 
   const removeCoordinator = (id) => {
-    fetch(`http://localhost:3001/admin/guide/${id}` , 
+    fetch(`https://project-tour-management-server.onrender.com/admin/guide/${id}` , 
       {
         method:'DELETE',
         headers: {
@@ -296,7 +296,7 @@ const AdminPage = () => {
   };
 
   const removeAdmin = (username) => {
-    fetch(`http://localhost:3001/admin/coadmin/${username}` ,
+    fetch(`https://project-tour-management-server.onrender.com/admin/coadmin/${username}` ,
       {
         method: 'DELETE' , 
         headers: {
@@ -380,7 +380,7 @@ const AdminPage = () => {
           variant="contained"
           color="primary"
           onClick={() => {
-            fetch(`http://localhost:3001/admin/coadmin`, {
+            fetch(`https://project-tour-management-server.onrender.com/admin/coadmin`, {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
@@ -475,7 +475,7 @@ const AdminPage = () => {
             //     assigned_tours: [coordinatorData.tour],
             //   },
             // });
-            fetch(`http://localhost:3001/admin/guide`, {
+            fetch(`https://project-tour-management-server.onrender.com/admin/guide`, {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
@@ -701,7 +701,7 @@ const AdminPage = () => {
 
         <Button type="submit" variant="contained" color="primary" onClick={()=>{
           // console.log(tourData)
-          fetch('http://localhost:3001/admin/tour', 
+          fetch('https://project-tour-management-server.onrender.com/admin/tour', 
             {
               method:'POST' , 
               headers: {
