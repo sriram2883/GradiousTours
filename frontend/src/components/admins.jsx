@@ -32,7 +32,7 @@ const AdminOperations = () => {
   // Fetching admin data
   const fetchAdmins = async () => {
     try {
-      const response = await fetch('http://localhost:3001/admin/coadmins',
+      const response = await fetch('https://project-tour-management-server.onrender.com/admin/coadmins',
         { headers:{
              Authorization: `Bearer ${token}`,
         }
@@ -53,7 +53,7 @@ const AdminOperations = () => {
   // Admin creation
   const handleCreate = async () => {
     try {
-      const response = await fetch("http://localhost:3001/admin/coadmin", {
+      const response = await fetch("https://project-tour-management-server.onrender.com/admin/coadmin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -80,7 +80,7 @@ const AdminOperations = () => {
     if (!selectedAdmin) return;
     try {
       const response = await fetch(
-        `http://localhost:3001/admin/coadmin/${username}`,
+        `https://project-tour-management-server.onrender.com/admin/coadmin/${username}`,
         {
           method: "PUT",
           headers: {
@@ -107,7 +107,7 @@ const AdminOperations = () => {
   const handleDelete = async (user) => {
     try {
       const response = await fetch(
-        `http://localhost:3001/admin/coadmin/${user}`,
+        `https://project-tour-management-server.onrender.com/admin/coadmin/${user}`,
         {
           method: "DELETE",
           headers: {
