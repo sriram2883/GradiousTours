@@ -40,7 +40,7 @@ const GuideOperations = () => {
   const fetchGuides = async () => {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:3001/admin/guides", {
+      const response = await fetch("https://project-tour-management-server.onrender.com/admin/guides", {
         headers:{Authorization: `Bearer ${token}`,}
         
       });
@@ -75,7 +75,7 @@ const GuideOperations = () => {
     if (!validateForm()) return;
 
     try {
-      const response = await fetch("http://localhost:3001/admin/guide", {
+      const response = await fetch("https://project-tour-management-server.onrender.com/admin/guide", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -109,7 +109,7 @@ const GuideOperations = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:3001/admin/guide/${currentGuide.guide_id}`,
+        `https://project-tour-management-server.onrender.com/admin/guide/${currentGuide.guide_id}`,
         {
           method: "PUT",
           headers: {
@@ -138,7 +138,7 @@ const GuideOperations = () => {
   // Handle guide deletion
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`http://localhost:3001/admin/guide/${id}`, {
+      const response = await fetch(`https://project-tour-management-server.onrender.com/admin/guide/${id}`, {
         method: "DELETE",
         headers: {
         Authorization: `Bearer ${token}`,
