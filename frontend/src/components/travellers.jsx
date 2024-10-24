@@ -56,7 +56,7 @@ const TravellerOperations = () => {
   const fetchTravellers = async () => {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:3001/admin/traveller", {
+      const response = await fetch("https://project-tour-management-server.onrender.com/admin/traveller", {
         headers: {
           Authorization: `Bearer ${token}`,
         }
@@ -96,7 +96,7 @@ const TravellerOperations = () => {
 
   const handleCreate = async () => {
     try {
-      const response = await fetch("http://localhost:3001/admin/traveller", {
+      const response = await fetch("https://project-tour-management-server.onrender.com/admin/traveller", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -129,7 +129,7 @@ const TravellerOperations = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:3001/admin/traveller/${currentTraveller.username}`,
+        `https://project-tour-management-server.onrender.com/admin/traveller/${currentTraveller.username}`,
         {
           method: "PUT",
           headers: {
@@ -161,7 +161,7 @@ const TravellerOperations = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:3001/admin/traveller/${currentTraveller.username}`,
+        `https://project-tour-management-server.onrender.com/admin/traveller/${currentTraveller.username}`,
         {
           method: "DELETE",
           headers: {
