@@ -46,7 +46,7 @@ const TourOperations = () => {
   const fetchTours = async () => {
     setLoading(true)
     try {
-      const response = await fetch('http://localhost:3001/admin/tours', {
+      const response = await fetch('https://project-tour-management-server.onrender.com/admin/tours', {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!response.ok) throw new Error('Network response was not ok');
@@ -79,7 +79,7 @@ const TourOperations = () => {
     const updatedDetails = { ...details, timespent, tourid: tourId };
 
     try {
-      const response = await fetch('http://localhost:3001/admin/tour', {
+      const response = await fetch('https://project-tour-management-server.onrender.com/admin/tour', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json', Authorization: `Bearer ${token}`,
@@ -126,7 +126,7 @@ const TourOperations = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:3001/admin/tour/${currentTour.tour_id}`,
+        `https://project-tour-management-server.onrender.com/admin/tour/${currentTour.tour_id}`,
         {
           method: "PUT",
           headers: {
@@ -149,7 +149,7 @@ const TourOperations = () => {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`http://localhost:3001/admin/tour/${id}`, {
+      const response = await fetch(`https://project-tour-management-server.onrender.com/admin/tour/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
