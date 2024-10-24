@@ -39,8 +39,8 @@ const LoginPage = () => {
     }
   
     const endpoint = isSignup
-      ? "http://localhost:3001/login/register"
-      : "http://localhost:3001/login/";
+      ? "https://project-tour-management-server.onrender.com/login/register"
+      : "https://project-tour-management-server.onrender.com/login/";
   
     const payload = {
       username,
