@@ -55,21 +55,21 @@ const CoordinatorPage = () => {
       try {
         const [coordinatorResponse, toursResponse, bookingsResponse] =
           await Promise.all([
-            fetch(`http://localhost:3001/guide/guide/${user.username}`, {
+            fetch(`https://project-tour-management-server.onrender.com/guide/guide/${user.username}`, {
               method: "GET",
               headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
               },
             }),
-            fetch(`http://localhost:3001/guide/tour/${user.username}`, {
+            fetch(`https://project-tour-management-server.onrender.com/guide/tour/${user.username}`, {
               method: "GET",
               headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
               },
             }),
-            fetch(`http://localhost:3001/guide/travellers/${user.username}`, {
+            fetch(`https://project-tour-management-server.onrender.com/guide/travellers/${user.username}`, {
               method: "GET",
               headers: {
                 "Content-Type": "application/json",
@@ -135,7 +135,7 @@ const CoordinatorPage = () => {
     const uniquePhoneNumbers = [...new Set(phoneNumbers)]; // Remove duplicates
 
     try {
-      const response = await fetch("http://localhost:3001/guide/send-whatsapp", {
+      const response = await fetch("https://project-tour-management-server.onrender.com/guide/send-whatsapp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
