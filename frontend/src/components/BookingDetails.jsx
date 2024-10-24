@@ -66,7 +66,7 @@ const BookingDetails = () => {
 
   // Fetch tours data
   useEffect(() => {
-    fetch("http://localhost:3001/user/tours", {
+    fetch("https://project-tour-management-server.onrender.com/user/tours", {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     })
@@ -110,7 +110,7 @@ const BookingDetails = () => {
       navigate("/login");
       return;
     }
-    fetch(`http://localhost:3001/user/tour/${tourid}`, {
+    fetch(`https://project-tour-management-server.onrender.com/user/tour/${tourid}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
