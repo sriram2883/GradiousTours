@@ -9,7 +9,7 @@ import ConfirmedTours from "./components/confirmedtours";
 import HomePage from "./components/HomePage";
 import TourPage from "./components/TourPage";
 import AdminPage from "./components/AdminPage";
-import CoordinatorPage from "./components/CoordinatorPage";
+import CoordinatorPage from "./components/coordinatorPage";
 import LoginPage from "./components/LoginPage";
 import BookingDetails from "./components/BookingDetails";
 import About from "./components/About";
