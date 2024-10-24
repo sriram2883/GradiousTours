@@ -22,7 +22,7 @@ const TourCards = () => {
   useEffect(() => {
     const fetchTours = async () => {
       try {
-        const res1 = await fetch("http://localhost:3001/user/tours", {
+        const res1 = await fetch("https://project-tour-management-server.onrender.com/user/tours", {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });
@@ -31,14 +31,14 @@ const TourCards = () => {
         setTours(tour1);
 
         const res2 = await fetch(
-          "http://localhost:3001/user/tours/highlyrecommended",
+          "https://project-tour-management-server.onrender.com/user/tours/highlyrecommended",
           { method: "GET", headers: { "Content-Type": "application/json" } }
         );
         const data2 = await res2.json();
         const tour2 = data2.map((tour) => tour.details);
         setRtours(tour2);
 
-        const res3 = await fetch("http://localhost:3001/user/tours/popular", {
+        const res3 = await fetch("https://project-tour-management-server.onrender.com/user/tours/popular", {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });
