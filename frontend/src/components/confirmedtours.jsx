@@ -14,7 +14,7 @@ function ConfirmedTours() {
     if (!user) return;
 
     setLoading(true); // Start loading
-    fetch(`http://localhost:3001/user/bookedtours/${user.username}`, {
+    fetch(`https://project-tour-management-server.onrender.com/user/bookedtours/${user.username}`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -46,7 +46,7 @@ function ConfirmedTours() {
       const fetchTourDetails = async () => {
         setLoading(true); // Start loading when fetching details
         const detailsPromises = confirmedtours.map((tour) =>
-          fetch(`http://localhost:3001/user/tour/${tour.tour_id}`, {
+          fetch(`https://project-tour-management-server.onrender.com/user/tour/${tour.tour_id}`, {
             method: 'GET',
             headers: {
               Authorization: `Bearer ${token}`,
