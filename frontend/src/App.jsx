@@ -41,7 +41,6 @@ function App() {
           }
         />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/test/bk" element={<BookingDetails />} />
         <Route path="/booking/:tourid" element={<BookingDetails />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
