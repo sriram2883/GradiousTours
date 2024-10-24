@@ -22,7 +22,7 @@ const Navbar = () => {
     if (isloggedin && user.usertype=='user') {
       const fetchBookings = async () => {
         try {
-          const response = await fetch(`http://localhost:3001/user/bookedtours/${user.username}`, {
+          const response = await fetch(`https://project-tour-management-server.onrender.com/user/bookedtours/${user.username}`, {
             method: 'GET',
             headers: {
               Authorization: `Bearer ${localStorage.getItem('token')}`,
