@@ -8,7 +8,7 @@ import {
 import ConfirmedTours from "./components/confirmedtours";
 import HomePage from "./components/HomePage";
 import TourPage from "./components/TourPage";
-import AdminPage from "./components/Adminpage";
+import AdminPage from "./components/AdminPage";
 import CoordinatorPage from "./components/CoordinatorPage";
 import LoginPage from "./components/LoginPage";
 import BookingDetails from "./components/BookingDetails";
