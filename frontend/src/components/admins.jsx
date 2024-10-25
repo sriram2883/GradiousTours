@@ -13,12 +13,14 @@ import {
   IconButton,
   Snackbar,
   Alert,
+  CircularProgress,
   Box,
 } from '@mui/material';
 import { Add, Edit, Delete } from '@mui/icons-material';
 
 const AdminOperations = () => {
   const [admins, setAdmins] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -31,18 +33,23 @@ const AdminOperations = () => {
 
   // Fetching admin data
   const fetchAdmins = async () => {
+    setLoading(true);
     try {
       const response = await fetch('https://project-tour-management-server.onrender.com/admin/coadmins',
-        { headers:{
-             Authorization: `Bearer ${token}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
         }
-}
       );
       if (!response.ok) throw new Error('Network response was not ok');
       const data = await response.json();
       setAdmins(data);
     } catch (error) {
       console.error('Error fetching admins:', error);
+    }
+    finally {
+      setLoading(false);
     }
   };
 
@@ -112,7 +119,7 @@ const AdminOperations = () => {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           }
         }
       );
@@ -166,42 +173,47 @@ const AdminOperations = () => {
       </Grid>
 
       <Grid container spacing={3} sx={{ marginTop: 3 }}>
-        {admins.map((admin) => (
-          <Grid item xs={12} sm={6} md={4} key={admin.username}>
-            <Card sx={{ position: 'relative', '&:hover': { boxShadow: 6 } }}>
-              <CardContent>
-                <Typography variant="h6" component="div">
-                  {admin.username}
-                </Typography>
-                <Typography color="textSecondary">
-                  <strong>Email:</strong> {admin.email}
-                </Typography>
-                <Grid
-                  container
-                  justifyContent="space-between"
-                  alignItems="center"
-                  sx={{ marginTop: 2 }}
-                >
-                  <IconButton
-                    aria-label="edit"
-                    color="primary"
-                    onClick={() => openDialog(admin)}
+        {loading ? (
+          <CircularProgress />
+        ) : (
+          admins.map((admin) => (
+            <Grid item xs={12} sm={6} md={4} key={admin.username}>
+              <Card sx={{ position: 'relative', '&:hover': { boxShadow: 6 } }}>
+                <CardContent>
+                  <Typography variant="h6" component="div">
+                    {admin.username}
+                  </Typography>
+                  <Typography color="textSecondary">
+                    <strong>Email:</strong> {admin.email}
+                  </Typography>
+                  <Grid
+                    container
+                    justifyContent="space-between"
+                    alignItems="center"
+                    sx={{ marginTop: 2 }}
                   >
-                    <Edit />
-                  </IconButton>
-                  <IconButton
-                    aria-label="delete"
-                    color="secondary"
-                    onClick={() => handleDelete(admin.username)}
-                  >
-                    <Delete />
-                  </IconButton>
-                </Grid>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
+                    <IconButton
+                      aria-label="edit"
+                      color="primary"
+                      onClick={() => openDialog(admin)}
+                    >
+                      <Edit />
+                    </IconButton>
+                    <IconButton
+                      aria-label="delete"
+                      color="secondary"
+                      onClick={() => handleDelete(admin.username)}
+                    >
+                      <Delete />
+                    </IconButton>
+                  </Grid>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))
+        )}
       </Grid>
+
 
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} fullWidth maxWidth="sm">
         <DialogTitle>{isCreating ? 'Create Admin' : 'Edit Admin'}</DialogTitle>
