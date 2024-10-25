@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -19,7 +19,7 @@ import AdminDashboard from "./components/admindashboard";
 import ProtectedRoute from "./components/ProtectedRoute"; // Import the ProtectedRoute component
 
 function App() {
-  const token = localStorage.getItem("token");
+  const [token,setToken] =useState(localStorage.getItem("token"));
   useEffect(() => {
     if (token) {
       fetch("https://project-tour-management-server.onrender.com/verify", {
@@ -61,7 +61,9 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/login" element={<LoginPage />} />
+        {
+          (token == null) ? <Route path="/login" element={<LoginPage />} /> : null
+        }        
         <Route path="/booking/:tourid" element={<BookingDetails />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
