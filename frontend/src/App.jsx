@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -19,6 +19,27 @@ import AdminDashboard from "./components/admindashboard";
 import ProtectedRoute from "./components/ProtectedRoute"; // Import the ProtectedRoute component
 
 function App() {
+  const token = localStorage.getItem("token");
+  useEffect(() => {
+    if (token) {
+      fetch("http://localhost:3001/verify", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => {
+          if (res.ok) {
+            console.log("User is authenticated");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          localStorage.clear();
+        });
+    }
+  }, [token]);
   return (
     <Router>
       <Routes>
