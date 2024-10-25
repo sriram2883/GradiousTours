@@ -46,7 +46,7 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/confirmedtours" element={<ConfirmedTours />} />
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route path="*" element={<HomePage />} />
       </Routes>
     </Router>
   );
