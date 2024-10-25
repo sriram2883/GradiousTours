@@ -22,7 +22,7 @@ function App() {
   const token = localStorage.getItem("token");
   useEffect(() => {
     if (token) {
-      fetch("http://localhost:3001/verify", {
+      fetch("https://project-tour-management-server.onrender.com/verify", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
