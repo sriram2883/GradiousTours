@@ -133,7 +133,7 @@ const Navbar = () => {
           <Button sx={mobileMenuButtonStyles} component={Link} to="/contact" onClick={handleMenuToggle}>
             Contact
           </Button>
-          {isloggedin && bookings && (
+          {isloggedin && bookings && (user.usertype=='user')&&(
             <Button sx={mobileMenuButtonStyles} component={Link} to="/confirmedtours">
               My Tours
             </Button>
